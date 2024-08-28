@@ -6,112 +6,82 @@
     <title>Can U Be</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
-        /* General body styling */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-image: url('background2.gif');
             background-size: cover;
             background-position: center;
             color: white;
             font-family: Arial, sans-serif;
-            background-color: #000; /* Fallback color if background image is not loaded */
         }
-
-        /* Styling for the container holding the content */
         .container {
             text-align: center;
-            opacity: 0; /* Initially hidden, will fade in */
-            transition: opacity 1s ease-in-out; /* Smooth transition for the fade-in effect */
+            display: none;
         }
-
-        /* Loader styling (spinner) */
         #loader {
-            border: 16px solid #f3f3f3; /* Light grey border */
-            border-radius: 50%; /* Circular shape */
-            border-top: 16px solid #3498db; /* Blue top border for animation */
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
             width: 120px;
             height: 120px;
-            animation: spin 2s linear infinite; /* Spin animation */
+            animation: spin 2s linear infinite;
         }
-
-        /* Keyframes for the spinning animation */
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        /* Basic audio element styling */
         audio {
             margin-top: 20px;
-            outline: none; /* Removes the default focus outline */
+            outline: none;
         }
-
-        /* Responsive design adjustments for smaller screens */
         @media (max-width: 600px) {
             h1 {
-                font-size: 24px; /* Smaller font size for the header */
+                font-size: 24px;
             }
             #loader {
                 width: 80px;
                 height: 80px;
-                border-width: 12px; /* Smaller loader size */
+                border-width: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Loader element to be displayed while the page is loading -->
     <div id="loader"></div>
-
-    <!-- Container that holds the main content, initially hidden -->
     <div class="container">
         <h1>Can U Be</h1>
-
-        <!-- Audio player with controls -->
+        <!-- Added preload="auto" to ensure the audio loads as soon as possible -->
         <audio controls preload="auto">
             <source src="canube.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
-
-        <!-- Attribution to the creator -->
         <h3>for bradley</h3>
     </div>
-
     <script>
-        // Event listener to lazy load the background image after the DOM content is loaded
-        document.addEventListener("DOMContentLoaded", function() {
-            document.body.style.backgroundImage = "url('background2.gif')";
-        });
-
-        // Selecting key elements for manipulation
         var audio = document.querySelector('audio');
         var loader = document.getElementById('loader');
         var container = document.querySelector('.container');
 
-        // Event listener for when the audio can play through without buffering
-        audio.addEventListener('canplaythrough', function() {
-            loader.style.display = 'none'; // Hide the loader
-            container.style.opacity = '1'; // Fade in the container
-        });
-
-        // Event listener to make the container visible as soon as some audio data is loaded
+        // Fallback event listener for loadeddata in case canplaythrough doesn't fire
         audio.addEventListener('loadeddata', function() {
-            container.style.opacity = '1'; // Fade in the container
+            loader.style.display = 'none';
+            container.style.display = 'block';
         });
 
-        // Event listener for when the audio is buffering or waiting
-        audio.addEventListener('waiting', function() {
-            loader.style.display = 'block'; // Show the loader during buffering
-            container.style.opacity = '0.5'; // Dim the container
+        // Original canplaythrough event listener
+        audio.addEventListener('canplaythrough', function() {
+            loader.style.display = 'none';
+            container.style.display = 'block';
         });
 
-        // Event listener for when the audio starts playing smoothly
-        audio.addEventListener('playing', function() {
-            loader.style.display = 'none'; // Hide the loader
-            container.style.opacity = '1'; // Restore full opacity to the container
+        // Ensure the container is displayed if the document is fully loaded before the audio
+        document.addEventListener('DOMContentLoaded', function() {
+            loader.style.display = 'none';
+            container.style.display = 'block';
         });
     </script>
 </body>
