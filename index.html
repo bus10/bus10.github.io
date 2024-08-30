@@ -5,84 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Can U Be</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-image: url('background2.gif');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            text-align: center;
-            display: none;
-        }
-        #loader {
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #3498db;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        audio {
-            margin-top: 20px;
-            outline: none;
-        }
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 24px;
-            }
-            #loader {
-                width: 80px;
-                height: 80px;
-                border-width: 12px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="loader"></div>
-    <div class="container">
+    <div id="loader" role="status" aria-live="polite" aria-label="Loading"></div>
+    <div class="container" aria-hidden="true">
         <h1>Can U Be</h1>
-        <!-- Added preload="auto" to ensure the audio loads as soon as possible -->
-        <audio controls preload="auto">
+        <audio controls preload="auto" aria-label="Audio player">
             <source src="canube.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
         <h3>for bradley</h3>
     </div>
-    <script>
-        var audio = document.querySelector('audio');
-        var loader = document.getElementById('loader');
-        var container = document.querySelector('.container');
-
-        // Fallback event listener for loadeddata in case canplaythrough doesn't fire
-        audio.addEventListener('loadeddata', function() {
-            loader.style.display = 'none';
-            container.style.display = 'block';
-        });
-
-        // Original canplaythrough event listener
-        audio.addEventListener('canplaythrough', function() {
-            loader.style.display = 'none';
-            container.style.display = 'block';
-        });
-
-        // Ensure the container is displayed if the document is fully loaded before the audio
-        document.addEventListener('DOMContentLoaded', function() {
-            loader.style.display = 'none';
-            container.style.display = 'block';
-        });
-    </script>
+    <script src="script.js" defer></script>
 </body>
 </html>
