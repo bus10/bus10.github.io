@@ -1,0 +1,31 @@
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+	background-image: url('background2.gif');
+	background-size: cover;
+	background-position: center;
+	color: white;
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	text-align: center;
+	display: none;
+}
+
+#loader {
+	border: 16px solid var(--loader-border-color);
+	border-radius: 50%;
+	border-top: 16px solid var(--loader-border-top-color);
+	width: var(--loader-size);
+	height: var(--loader-size);
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
