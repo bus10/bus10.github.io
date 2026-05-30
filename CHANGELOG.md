@@ -1,5 +1,7 @@
 # Changelog
 
+[← Back to Home](index.html)
+
 All notable changes to this website will be documented in this file.
 
 The format is inspired by Keep a Changelog, and this project follows a simple date-based release history.
