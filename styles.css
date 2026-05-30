@@ -48,6 +48,30 @@ body {
     color: var(--bg-color);
 }
 
+.theme-toggle:focus-visible,
+.game-button:focus-visible,
+.nav-link:focus-visible {
+    outline: 2px solid var(--text-color);
+    outline-offset: 4px;
+}
+
+.theme-toggle:focus-visible,
+.game-button:focus-visible {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.nav-link:focus-visible {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    border-bottom-color: var(--text-color);
+}
+
+.theme-toggle[aria-pressed="true"] {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
 /* Layout */
 .container {
     max-width: 800px;
@@ -98,6 +122,10 @@ h1 {
 
 .nav-link:hover {
     border-bottom-color: var(--border-color);
+}
+
+.nav-link:focus-visible {
+    border-bottom-color: var(--text-color);
 }
 
 /* Game Styles */
@@ -189,6 +217,11 @@ audio {
 }
 
 .game-button:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.game-button:focus-visible {
     background-color: var(--text-color);
     color: var(--bg-color);
 }
@@ -290,6 +323,47 @@ img, audio, video {
     display: inline-block;
 }
 
+.countdown {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+    position: relative;
+}
+
+.countdown-item:not(:last-child)::after {
+    content: ':';
+    position: absolute;
+    right: -25px;
+    top: 0;
+    font-size: 48px;
+    opacity: 1;
+}
+
+.countdown-value {
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 10px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.countdown-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+}
+
 .description {
     font-size: 16px;
     line-height: 1.6;
@@ -313,6 +387,24 @@ img, audio, video {
     .description {
         font-size: 14px;
         padding: 0 10px;
+    }
+    
+    .countdown {
+        gap: 30px;
+    }
+    
+    .countdown-item:not(:last-child)::after {
+        right: -18px;
+        font-size: 36px;
+    }
+    
+    .countdown-value {
+        font-size: 36px;
+        min-width: 60px;
+    }
+    
+    .countdown-label {
+        font-size: 10px;
     }
 }
 
