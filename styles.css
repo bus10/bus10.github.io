@@ -95,9 +95,60 @@ h1 {
     margin-bottom: 60px;
 }
 
+.profile-panel {
+    border: 1px solid var(--border-color);
+    padding: 12px 14px;
+    margin-bottom: 40px;
+    max-width: 420px;
+}
+
+.profile-row {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.profile-row:last-child {
+    margin-bottom: 0;
+}
+
+.visit-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.visit-list li {
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
 /* Navigation */
 .nav-links {
     margin-bottom: 60px;
+}
+
+.nav-section {
+    margin-bottom: 52px;
+}
+
+.nav-section:last-child {
+    margin-bottom: 0;
+}
+
+.nav-section .nav-link.block:last-child {
+    margin-bottom: 0;
+}
+
+.nav-section-title {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 12px;
 }
 
 .nav-link {
@@ -288,6 +339,22 @@ audio {
     }
 }
 
+body[data-daily-mode="archive"] {
+    letter-spacing: 0.2px;
+}
+
+body[data-daily-mode="blackout"] .controls,
+body[data-daily-mode="blackout"] .day-indicator,
+body[data-daily-mode="blackout"] .footer {
+    opacity: 0.45;
+}
+
+body[data-daily-mode="overclock"] .theme-toggle,
+body[data-daily-mode="overclock"] .nav-link,
+body[data-daily-mode="overclock"] .game-button {
+    transition-duration: 0.08s;
+}
+
 /* Performance: image/audio hints */
 img, audio, video {
     content-visibility: auto;
@@ -374,6 +441,15 @@ img, audio, video {
 }
 
 @media (max-width: 600px) {
+    .nav-section {
+        margin-bottom: 40px;
+    }
+
+    .nav-section-title {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+
     .status-text {
         font-size: 24px;
         padding: 15px 25px;
@@ -415,4 +491,18 @@ button, .nav-link, .game-button, .theme-toggle, a {
 button:focus, .nav-link:focus, .game-button:focus, .theme-toggle:focus, a:focus {
     outline: 2px dashed var(--border-color);
     outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+
+    #loader {
+        border-top-color: var(--border-color);
+    }
 }
