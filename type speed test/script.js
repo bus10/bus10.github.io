@@ -67,6 +67,7 @@ const timerDisplay = document.getElementById('timer');
 const resetBtn = document.getElementById('resetBtn');
 const instructionText = document.querySelector('.instruction-text');
 const lengthButtons = document.querySelectorAll('.length-btn');
+const resultsPanel = document.getElementById('resultsPanel');
 
 function initializeTest() {
     currentWordIndex = 0;
@@ -107,6 +108,7 @@ function appendMoreWords() {
     selectedWords.slice(currentLength).forEach((word, index) => {
         const wordEl = document.createElement('span');
         wordEl.className = 'word';
+        wordEl.classList.add('future');
         wordEl.textContent = word;
         wordEl.setAttribute('data-word', word);
         wordEl.id = `word-${currentLength + index}`;
@@ -120,6 +122,7 @@ function displayWords(wordsList) {
         const wordEl = document.createElement('span');
         wordEl.className = 'word';
         if (index === 0) wordEl.classList.add('current');
+        else wordEl.classList.add('future');
         wordEl.textContent = word;
         wordEl.setAttribute('data-word', word);
         wordEl.id = `word-${index}`;
@@ -238,8 +241,11 @@ function handleKeyPress(e) {
         currentWordIndex++;
         currentCharIndex = 0;
         typedChars = [];
+
+        currentWord.classList.add('completed');
         
         if (currentWordIndex < allWords.length) {
+            allWords[currentWordIndex].classList.remove('future');
             allWords[currentWordIndex].classList.add('current');
             allWords[currentWordIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
@@ -247,6 +253,7 @@ function handleKeyPress(e) {
             if (testActive) {
                 appendMoreWords();
                 const updatedWords = Array.from(document.querySelectorAll('.word'));
+                updatedWords[currentWordIndex].classList.remove('future');
                 updatedWords[currentWordIndex].classList.add('current');
                 updatedWords[currentWordIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
@@ -329,6 +336,9 @@ function endTest() {
     
     clearInterval(timerInterval);
     wordsContainer.classList.remove('active');
+
+    const previousProfile = window.CUBState ? window.CUBState.getProfile() : null;
+    const previousBestWpm = previousProfile ? previousProfile.bestTypeSpeed.wpm : 0;
     
     // Calculate final stats
     const elapsedMinutes = testDuration / 60; // Convert duration to minutes
@@ -336,19 +346,37 @@ function endTest() {
     const weightedIncorrect = incorrectChars + (correctedChars * 0.3);
     const totalChars = correctChars + weightedIncorrect;
     const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
-    
-    // Show results
-    const finishedDiv = document.createElement('div');
-    finishedDiv.className = 'finished';
-    finishedDiv.innerHTML = `
-        <h2>Test Complete!</h2>
-        <p><strong>WPM:</strong> ${wpm}</p>
-        <p><strong>Accuracy:</strong> ${accuracy}%</p>
-        <p><strong>Words Typed:</strong> ${Math.round(correctChars / 5)}</p>
-    `;
-    
-    const testArea = document.querySelector('.test-area');
-    testArea.insertBefore(finishedDiv, testArea.firstChild);
+
+    if (window.CUBState) {
+        window.CUBState.setBestTypeSpeed(wpm, accuracy, testDuration);
+        window.CUBState.recordGamePlayed();
+    }
+
+    if (resultsPanel) {
+        const wordsTyped = Math.round(correctChars / 5);
+        const bestWpm = Math.max(previousBestWpm, wpm);
+        const newRecord = wpm > previousBestWpm;
+
+        resultsPanel.hidden = false;
+        resultsPanel.innerHTML = `
+            <div class="results-title">Test Complete</div>
+            <div class="results-grid">
+                <div class="results-item">
+                    <span class="results-label">WPM</span>
+                    <span class="results-value">${wpm}</span>
+                </div>
+                <div class="results-item">
+                    <span class="results-label">Accuracy</span>
+                    <span class="results-value">${accuracy}%</span>
+                </div>
+                <div class="results-item">
+                    <span class="results-label">Words</span>
+                    <span class="results-value">${wordsTyped}</span>
+                </div>
+            </div>
+            <div class="results-note">Best WPM: ${bestWpm}${newRecord ? ' · New record' : ''}</div>
+        `;
+    }
 }
 
 function reset() {
@@ -358,9 +386,9 @@ function reset() {
     }
     
     // Remove finished message if it exists
-    const finished = document.querySelector('.finished');
-    if (finished) {
-        finished.remove();
+    if (resultsPanel) {
+        resultsPanel.hidden = true;
+        resultsPanel.innerHTML = '';
     }
     
     initializeTest();
@@ -387,4 +415,6 @@ lengthButtons.forEach(btn => {
 });
 
 // Initialize on load
-window.addEventListener('load', initializeTest);
+window.addEventListener('load', () => {
+    initializeTest();
+});

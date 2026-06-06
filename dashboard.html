@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CAN U BE</title>
+    <meta name="description" content="CUB profile dashboard with visits, records, and daily mode.">
+    <meta property="og:title" content="Dashboard - CAN U BE">
+    <meta property="og:description" content="CUB profile dashboard with visits, records, and daily mode.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bus10.github.io/dashboard.html">
+    <meta property="og:image" content="https://bus10.github.io/images/favicon.ico">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Dashboard - CAN U BE">
+    <meta name="twitter:description" content="CUB profile dashboard with visits, records, and daily mode.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" tabindex="0" aria-label="Toggle theme">Light</button>
+
+    <div class="container">
+        <a href="index.html" class="nav-link" tabindex="0" aria-label="Back to home">← Back to Home</a>
+
+        <h1 class="hero-title">Dashboard</h1>
+
+        <div class="profile-panel" aria-live="polite">
+            <div class="profile-row">Mode: <span id="dailyMode">--</span></div>
+            <div class="profile-row">
+                Daily Modes: <span id="dailyModesStatus">--</span>
+                <button class="game-button" id="dailyModesToggle" type="button" style="margin-left: 8px; padding: 4px 10px; font-size: 10px;">Toggle</button>
+            </div>
+            <div class="profile-row">Visits: <span id="visitCount">0</span></div>
+            <div class="profile-row">Games Played: <span id="gamesPlayed">0</span></div>
+            <div class="profile-row">Best Snake: <span id="bestSnake">0</span></div>
+            <div class="profile-row">Snake Updated: <span id="bestSnakeUpdated">--</span></div>
+            <div class="profile-row">Best WPM: <span id="bestWpm">0</span></div>
+            <div class="profile-row">Best Accuracy: <span id="bestAccuracy">0</span>%</div>
+            <div class="profile-row">Typing Updated: <span id="bestTypeUpdated">--</span></div>
+            <div class="profile-row">First Visit: <span id="firstVisit">--</span></div>
+        </div>
+
+        <div class="song-info">
+            <div class="song-title">Visited Pages</div>
+            <div class="controls" style="opacity: 1; text-transform: none; letter-spacing: 0;">
+                <ul id="visitedPages" class="visit-list"></ul>
+            </div>
+        </div>
+
+        <button class="game-button" id="resetStatsButton" type="button">Reset Stats</button>
+
+        <div class="footer spaced">Website made by @bus0</div>
+    </div>
+
+    <script src="cub-state.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        function pageNameFromPath(path) {
+            const friendlyNames = {
+                '/': 'Home',
+                '/index.html': 'Home',
+                '/index1.html': 'Music Player',
+                '/benevolent-inequality.html': 'Benevolent Inequality',
+                '/busify.html': 'Busify Podcast',
+                '/snake.html': 'Snake',
+                '/plinko.html': 'Plinko',
+                '/tictactoe.html': 'Tic Tac Toe',
+                '/time-machine.html': 'Time Machine',
+                '/dashboard.html': 'Dashboard',
+                '/changelog.html': 'Changelog',
+                '/404.html': '404',
+                '/type speed test/index.html': 'Type Speed Test'
+            };
+
+            if (friendlyNames[path]) {
+                return friendlyNames[path];
+            }
+
+            if (!path || path === '/' || path === '/index.html') {
+                return 'Home';
+            }
+
+            const cleanedPath = path.split('?')[0].split('#')[0];
+            const segments = cleanedPath.split('/').filter(Boolean);
+            const lastSegment = segments[segments.length - 1] || '';
+            const decoded = decodeURIComponent(lastSegment || cleanedPath);
+            const baseName = decoded.replace(/\.html?$/i, '');
+            const spaced = baseName.replace(/[-_]/g, ' ');
+            return spaced.replace(/\b\w/g, (char) => char.toUpperCase()) || 'Home';
+        }
+
+        function toDateLabel(isoString) {
+            if (!isoString) return '--';
+            const value = new Date(isoString);
+            if (Number.isNaN(value.getTime())) return '--';
+            return value.toLocaleDateString();
+        }
+
+        const profile = window.CUBState ? window.CUBState.getProfile() : null;
+
+        function renderDailyModeState() {
+            const dailyModeElement = document.getElementById('dailyMode');
+            const dailyModesStatusElement = document.getElementById('dailyModesStatus');
+            const dailyModesToggleButton = document.getElementById('dailyModesToggle');
+            if (!window.CUBState || !dailyModeElement || !dailyModesStatusElement || !dailyModesToggleButton) return;
+
+            const enabled = window.CUBState.isDailyModeEnabled();
+            const activeMode = window.CUBState.getActiveDailyMode();
+
+            dailyModesStatusElement.textContent = enabled ? 'Enabled' : 'Disabled';
+            dailyModeElement.textContent = activeMode || 'OFF';
+            dailyModesToggleButton.textContent = enabled ? 'Disable' : 'Enable';
+        }
+
+        renderDailyModeState();
+
+        if (profile) {
+            document.getElementById('visitCount').textContent = profile.visitCount;
+            document.getElementById('gamesPlayed').textContent = profile.gamesPlayed;
+            document.getElementById('bestSnake').textContent = profile.bestSnake;
+            document.getElementById('bestSnakeUpdated').textContent = toDateLabel(profile.bestSnakeUpdatedISO);
+            document.getElementById('bestWpm').textContent = profile.bestTypeSpeed.wpm;
+            document.getElementById('bestAccuracy').textContent = profile.bestTypeSpeed.accuracy;
+            document.getElementById('bestTypeUpdated').textContent = toDateLabel(profile.bestTypeSpeedUpdatedISO);
+
+            const firstVisit = new Date(profile.firstVisitISO);
+            if (!Number.isNaN(firstVisit.getTime())) {
+                document.getElementById('firstVisit').textContent = firstVisit.toLocaleDateString();
+            }
+
+            const visitedPagesElement = document.getElementById('visitedPages');
+            const entries = Object.entries(profile.visitedPages || {}).sort((a, b) => b[1] - a[1]);
+
+            if (entries.length === 0) {
+                const item = document.createElement('li');
+                item.textContent = 'No page history yet.';
+                visitedPagesElement.appendChild(item);
+            } else {
+                entries.forEach(([path, count]) => {
+                    const item = document.createElement('li');
+                    item.textContent = `${pageNameFromPath(path)} (${count})`;
+                    visitedPagesElement.appendChild(item);
+                });
+            }
+        }
+
+        const resetStatsButton = document.getElementById('resetStatsButton');
+        if (resetStatsButton) {
+            resetStatsButton.addEventListener('click', () => {
+                if (!window.CUBState) return;
+                const shouldReset = window.confirm('Reset all local dashboard stats? This cannot be undone.');
+                if (!shouldReset) return;
+                window.CUBState.clearProfile();
+                window.location.reload();
+            });
+        }
+
+        const dailyModesToggleButton = document.getElementById('dailyModesToggle');
+        if (dailyModesToggleButton) {
+            dailyModesToggleButton.addEventListener('click', () => {
+                if (!window.CUBState) return;
+                const nextEnabled = !window.CUBState.isDailyModeEnabled();
+                window.CUBState.setDailyModeEnabled(nextEnabled);
+                renderDailyModeState();
+            });
+        }
+    </script>
+</body>
+</html>

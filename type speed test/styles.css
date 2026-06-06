@@ -234,20 +234,3 @@ body[data-theme="light"] {
         min-width: auto;
     }
 }
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 1.8em;
-    }
-
-    .stats {
-        flex-direction: column;
-    }
-
-    .words-container {
-        font-size: 1.1em;
-        min-height: 100px;
-        padding: 15px;
-    }
-}

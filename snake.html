@@ -4,7 +4,16 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game - Can U Be</title>
+    <title>Snake Game - CAN U BE</title>
+    <meta name="description" content="Play Snake on Can U Be. Smooth industrial visuals with precision keyboard controls.">
+    <meta property="og:title" content="Snake Game - CAN U BE">
+    <meta property="og:description" content="Smooth industrial visuals with precision keyboard controls.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bus10.github.io/snake.html">
+    <meta property="og:image" content="https://bus10.github.io/images/favicon.ico">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Snake Game - CAN U BE">
+    <meta name="twitter:description" content="Smooth industrial visuals with precision keyboard controls.">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,16 +22,16 @@
     <div class="container center">
         <h1>Snake</h1>
         
-    <a href="index.html" class="nav-link" tabindex="0" aria-label="Back to home">← Back</a>
+    <a href="index.html" class="nav-link" tabindex="0" aria-label="Back to home">← Back to Home</a>
         
         <div class="score">Score: <span id="score">0</span></div>
         
         <div style="width:100%;max-width:400px;margin:0 auto;">
-            <canvas id="gameCanvas" width="400" height="400" style="width:100%;height:auto;display:block;"></canvas>
+            <canvas id="gameCanvas" width="400" height="400" style="width:100%;height:auto;display:block;touch-action:none;"></canvas>
         </div>
         
         <div class="controls">
-            Use arrow keys or WASD to move
+            Use arrow keys, WASD, or swipe to move
         </div>
         
         <div id="gameOver" class="game-over" style="display: none;">
@@ -34,6 +43,7 @@
         </div>
     </div>
     
+    <script src="cub-state.js"></script>
     <script src="theme.js"></script>
 
     <script>
@@ -53,8 +63,32 @@
     let dy = 0;
     let nextDx = 0;
     let nextDy = 0;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchActive = false;
         let score = 0;
         let gameRunning = true;
+        const initialDailyMode = window.CUBState ? (window.CUBState.getActiveDailyMode() || 'OFF') : 'ARCHIVE';
+        const gameTickMs = initialDailyMode === 'OVERCLOCK' ? 85 : 100;
+
+        function setDirection(nx, ny) {
+            if (dx === 0 && dy === 0) {
+                dx = nx;
+                dy = ny;
+                nextDx = nx;
+                nextDy = ny;
+            } else {
+                nextDx = nx;
+                nextDy = ny;
+            }
+        }
+
+        function trySetDirection(nx, ny) {
+            if (!gameRunning) return;
+            if ((dx === 0 && dy === 0) || !(nx === -dx && ny === -dy)) {
+                setDirection(nx, ny);
+            }
+        }
 
         // Generate random food position that is NOT on the snake body
         function randomFood() {
@@ -180,6 +214,10 @@
         function gameOver() {
             gameRunning = false;
             gameOverElement.style.display = 'block';
+            if (window.CUBState) {
+                window.CUBState.setBestSnake(score);
+                window.CUBState.recordGamePlayed();
+            }
         }
 
         function resetGame() {
@@ -222,42 +260,72 @@
             }
 
             if (!gameRunning) return;
-
-            // On first keypress, set both dx/dy and nextDx/nextDy so snake starts immediately
-            function setDirection(nx, ny) {
-                if (dx === 0 && dy === 0) {
-                    dx = nx;
-                    dy = ny;
-                    nextDx = nx;
-                    nextDy = ny;
-                } else {
-                    nextDx = nx;
-                    nextDy = ny;
-                }
-            }
             switch(e.key) {
                 case 'ArrowUp':
                 case 'w':
                 case 'W':
-                    if (dx === 0 && dy === 0 || dy !== 1) setDirection(0, -1);
+                    trySetDirection(0, -1);
                     break;
                 case 'ArrowDown':
                 case 's':
                 case 'S':
-                    if (dx === 0 && dy === 0 || dy !== -1) setDirection(0, 1);
+                    trySetDirection(0, 1);
                     break;
                 case 'ArrowLeft':
                 case 'a':
                 case 'A':
-                    if (dx === 0 && dy === 0 || dx !== 1) setDirection(-1, 0);
+                    trySetDirection(-1, 0);
                     break;
                 case 'ArrowRight':
                 case 'd':
                 case 'D':
-                    if (dx === 0 && dy === 0 || dx !== -1) setDirection(1, 0);
+                    trySetDirection(1, 0);
                     break;
             }
         });
+
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length !== 1) return;
+            e.preventDefault();
+
+            if (!gameRunning) {
+                resetGame();
+                return;
+            }
+
+            touchActive = true;
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (touchActive) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', (e) => {
+            if (!touchActive) return;
+            e.preventDefault();
+            touchActive = false;
+
+            const touch = e.changedTouches && e.changedTouches[0];
+            if (!touch) return;
+
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            const minSwipeDistance = 24;
+
+            if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+                return;
+            }
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                trySetDirection(deltaX > 0 ? 1 : -1, 0);
+            } else {
+                trySetDirection(0, deltaY > 0 ? 1 : -1);
+            }
+        }, { passive: false });
 
     // Initialize game
     dx = 0;
@@ -265,7 +333,7 @@
     nextDx = 0;
     nextDy = 0;
     randomFood();
-    setInterval(gameLoop, 100);  // Game logic at 10 FPS
+    setInterval(gameLoop, gameTickMs);
     requestAnimationFrame(animate);  // Smooth rendering at 60 FPS
     </script>
 </body>

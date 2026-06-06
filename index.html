@@ -3,39 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Can U Be</title>
+    <title>CAN U BE</title>
     <meta name="description" content="IN A PERFECT WORLD THIS WEBSITE DOESN'T EXIST">
     <meta name="robots" content="index,follow">
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="canonical" href="https://bus10.github.io/">
     <!-- Open Graph -->
-    <meta property="og:title" content="Can U Be">
+    <meta property="og:title" content="CAN U BE">
     <meta property="og:description" content="IN A PERFECT WORLD THIS WEBSITE DOESN'T EXIST">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bus10.github.io/">
     <meta property="og:image" content="https://bus10.github.io/images/favicon.ico">
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Can U Be">
+    <meta name="twitter:title" content="CAN U BE">
     <meta name="twitter:description" content="IN A PERFECT WORLD THIS WEBSITE DOESN'T EXIST">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">Light</button>
+    <button class="theme-toggle" onclick="toggleTheme()" tabindex="0" aria-label="Toggle theme">Light</button>
     
     <div class="container">
-        <h1 class="hero-title">Can U Be</h1>
+        <h1 class="hero-title">CAN U BE</h1>
+        <div class="controls" style="margin-bottom: 22px;">Version 2.5 Update</div>
         
         <div class="nav-links">
-            <a href="index1.html" class="nav-link block">Music Player</a>
-            <a href="benevolent-inequality.html" class="nav-link block">BENEVOLENT INEQUALITY</a>
-            <a href="busify.html" class="nav-link block">BUSIFY PODCAST</a>
-            <a href="snake.html" class="nav-link block">Snake Game</a>
-            <a href="plinko.html" class="nav-link block">Plinko</a>
-            <a href="tictactoe.html" class="nav-link block">Tic Tac Toe</a>
-            <a href="type speed test/index.html" class="nav-link block">Type Speed Test</a>
-            <a href="time-machine.html" class="nav-link block">Time Machine</a>
-            <a href="changelog.html" class="nav-link block">Changelog</a>
+            <div class="nav-section">
+                <h2 class="nav-section-title">Listen</h2>
+                <a href="index1.html" class="nav-link block">Music Player</a>
+                <a href="benevolent-inequality.html" class="nav-link block">BENEVOLENT INEQUALITY</a>
+                <a href="busify.html" class="nav-link block">BUSIFY PODCAST</a>
+            </div>
+
+            <div class="nav-section">
+                <h2 class="nav-section-title">Play</h2>
+                <a href="snake.html" class="nav-link block">Snake</a>
+                <a href="plinko.html" class="nav-link block">Plinko</a>
+                <a href="tictactoe.html" class="nav-link block">Tic Tac Toe</a>
+                <a href="type speed test/index.html" class="nav-link block">Type Speed Test</a>
+            </div>
+
+            <div class="nav-section">
+                <h2 class="nav-section-title">System</h2>
+                <a href="time-machine.html" class="nav-link block">Time Machine</a>
+                <a href="changelog.html" class="nav-link block">Changelog</a>
+                <a href="dashboard.html" class="nav-link block">Dashboard</a>
+            </div>
         </div>
         
         <div class="footer spaced">
@@ -43,6 +56,7 @@
         </div>
     </div>
     
+    <script src="cub-state.js"></script>
     <script src="theme.js"></script>
 </body>
 </html>

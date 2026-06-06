@@ -3,19 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BENEVOLENT INEQUALITY</title>
+    <title>BENEVOLENT INEQUALITY - CAN U BE</title>
+    <meta name="description" content="BENEVOLENT INEQUALITY on Can U Be. The experimental song rotation page.">
+    <meta property="og:title" content="BENEVOLENT INEQUALITY - CAN U BE">
+    <meta property="og:description" content="The experimental song rotation page.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bus10.github.io/benevolent-inequality.html">
+    <meta property="og:image" content="https://bus10.github.io/images/favicon.ico">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="BENEVOLENT INEQUALITY - CAN U BE">
+    <meta name="twitter:description" content="The experimental song rotation page.">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">Light</button>
+    <button class="theme-toggle" onclick="toggleTheme()" tabindex="0" aria-label="Toggle theme">Light</button>
     
     <div id="loader"></div>
     
     <div class="container center">
         <h1 class="hero-title">BENEVOLENT INEQUALITY</h1>
         
-        <a href="index.html" class="nav-link">← Back</a>
+        <a href="index.html" class="nav-link" tabindex="0" aria-label="Back to home">← Back to Home</a>
         
         <div class="artwork-container">
             <img id="artwork" src="" alt="Album Artwork" class="artwork">
@@ -36,6 +45,7 @@
         </div>
     </div>
     
+    <script src="cub-state.js"></script>
     <script src="theme.js"></script>
     <script>
         // Song rotation based on day of week

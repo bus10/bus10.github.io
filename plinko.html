@@ -3,17 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plinko - Can U Be</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Plinko - CAN U BE</title>
+    <meta name="description" content="Play Plinko on Can U Be. Drop balls through the industrial board and chase high scores.">
+    <meta property="og:title" content="Plinko - CAN U BE">
+    <meta property="og:description" content="Drop balls through the industrial board and chase high scores.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bus10.github.io/plinko.html">
+    <meta property="og:image" content="https://bus10.github.io/images/favicon.ico">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Plinko - CAN U BE">
+    <meta name="twitter:description" content="Drop balls through the industrial board and chase high scores.">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">Light</button>
+    <button class="theme-toggle" onclick="toggleTheme()" tabindex="0" aria-label="Toggle theme">Light</button>
     
     <div class="container center">
         <h1>Plinko</h1>
         
-        <a href="index.html" class="nav-link">← Back</a>
+        <a href="index.html" class="nav-link" tabindex="0" aria-label="Back to home">← Back to Home</a>
         
         <div class="score">Score: <span id="score">0</span></div>
         <div class="controls">Click anywhere above the board to drop a ball</div>
@@ -27,6 +36,7 @@
         </div>
     </div>
     
+    <script src="cub-state.js"></script>
     <script src="theme.js"></script>
     <script>
         const canvas = document.getElementById('plinkoCanvas');
